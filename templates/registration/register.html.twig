@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block meta_description %}{{ metaDescription }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h4 mb-0">Inscription</h1>
+                </div>
+                <div class="card-body">
+                    {{ form_start(registrationForm) }}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(registrationForm.firstname) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(registrationForm.lastname) }}
+                            </div>
+                        </div>
+
+                        {{ form_row(registrationForm.email) }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(registrationForm.plainPassword.first) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(registrationForm.plainPassword.second) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form_widget(registrationForm.agreeTerms) }}
+                            {{ form_label(registrationForm.agreeTerms) }}
+                            {{ form_errors(registrationForm.agreeTerms) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-user-plus me-2"></i>S'inscrire
+                            </button>
+                        </div>
+                    {{ form_end(registrationForm) }}
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

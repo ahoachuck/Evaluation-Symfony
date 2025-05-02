@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau produit - Administration{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_product_index') }}">Administration des produits</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nouveau produit</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">Créer un nouveau produit</h1>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                        <div class="mb-3">
+                            {{ form_row(form.name) }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form_row(form.price) }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form_row(form.stock) }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form_row(form.description) }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form_row(form.imageFile) }}
+                            <div class="form-text text-muted">
+                                Formats acceptés : JPG, PNG, WebP. Taille maximale : 2 Mo.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check form-switch">
+                            {{ form_widget(form.isActive) }}
+                            {{ form_label(form.isActive) }}
+                            <div class="form-text">
+                                Activer ou désactiver l'affichage de ce produit sur le site.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ path('app_admin_product_index') }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="fa fa-times me-1"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save me-1"></i> Enregistrer
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h2 class="h5 mb-0">Informations</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-0">
+                        <h3 class="h6"><i class="fas fa-info-circle me-2"></i>Conseils pour les produits</h3>
+                        <ul class="mb-0 ps-3">
+                            <li>Utilisez un nom court et descriptif</li>
+                            <li>Ajoutez une description détaillée du produit</li>
+                            <li>Uploadez une image de bonne qualité</li>
+                            <li>Vérifiez que le prix et le stock sont corrects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

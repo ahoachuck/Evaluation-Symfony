@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du produit - Administration{% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_admin_product_index') }}">Administration des produits</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">Détail du produit</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            {% if product.image %}
+                                <img src="{{ asset('uploads/products/' ~ product.image) }}" class="img-fluid rounded" alt="{{ product.name }}">
+                            {% else %}
+                                <div class="bg-light text-center p-4 rounded">
+                                    <i class="fa fa-image fa-3x text-secondary"></i>
+                                    <p class="mt-2 mb-0">Pas d'image</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <td>{{ product.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <td>{{ product.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Prix</th>
+                                        <td>{{ product.price|number_format(2, ',', ' ') }} €</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Stock</th>
+                                        <td>
+                                            <span class="badge bg-{{ product.stock > 0 ? 'success' : 'danger' }}">
+                                                {{ product.stock }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <td>
+                                            <span class="badge bg-{{ product.isActive ? 'success' : 'warning' }}">
+                                                {{ product.isActive ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date de création</th>
+                                        <td>{{ product.createdAt ? product.createdAt|date('d/m/Y à H:i') : '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Dernière modification</th>
+                                        <td>{{ product.updatedAt ? product.updatedAt|date('d/m/Y à H:i') : 'Jamais' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Description</h5>
+                        <div class="p-3 bg-light rounded">
+                            {{ product.description|nl2br }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h2 class="h5 mb-0">Actions</h2>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}" class="btn btn-primary">
+                            <i class="fa fa-edit me-1"></i> Modifier
+                        </a>
+                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary" target="_blank">
+                            <i class="fa fa-eye me-1"></i> Voir sur le site
+                        </a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fa fa-trash me-1"></i> Supprimer
+                        </button>
+                        <a href="{{ path('app_admin_product_index') }}" class="btn btn-outline-secondary">
+                            <i class="fa fa-arrow-left me-1"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer le produit <strong>{{ product.name }}</strong> ?</p>
+                <p class="text-danger"><small>Cette action est irréversible.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form method="post" action="{{ path('app_admin_product_delete', {'id': product.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

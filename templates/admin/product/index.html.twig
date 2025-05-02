@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des produits - Mini Boutique{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="mb-4">Administration des produits</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <p class="m-0">Liste des produits en boutique</p>
+        <a href="{{ path('app_admin_product_new') }}" class="btn btn-success">
+            <i class="fa fa-plus me-1"></i> Nouveau produit
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Stock</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td class="text-center">
+                                {% if product.image %}
+                                    <img src="{{ asset('uploads/products/' ~ product.image) }}" class="img-thumbnail" style="max-width: 50px; background-color: rgba(31, 41, 55, 0.3); border-color: var(--glass-border-color);" alt="{{ product.name }}">
+                                {% else %}
+                                    <span class="badge bg-secondary"><i class="fa fa-image"></i></span>
+                                {% endif %}
+                            </td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.price|number_format(2, ',', ' ') }} €</td>
+                            <td>
+                                <span class="badge bg-{{ product.stock > 0 ? 'success' : 'danger' }}">
+                                    {{ product.stock }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ product.isActive ? 'success' : 'warning' }}">
+                                    {{ product.isActive ? 'Actif' : 'Inactif' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ path('app_admin_product_show', {'id': product.id}) }}" class="btn btn-outline-secondary">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_admin_product_edit', {'id': product.id}) }}" class="btn btn-outline-primary">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Modal de suppression -->
+                                <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ product.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content" style="background-color: var(--lighter-color); border-color: var(--glass-border-color);">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ product.id }}">Confirmer la suppression</h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Êtes-vous sûr de vouloir supprimer le produit <strong>{{ product.name }}</strong> ?</p>
+                                                <p class="text-danger"><small>Cette action est irréversible.</small></p>
+                                            </div>
+                                            <div class="modal-footer" style="border-top-color: var(--glass-border-color);">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <form method="post" action="{{ path('app_admin_product_delete', {'id': product.id}) }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fa fa-info-circle me-2"></i> Aucun produit trouvé
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
